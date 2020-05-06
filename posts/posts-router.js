@@ -27,10 +27,12 @@ router.post('/', (req, res) => {
           res.status(201).json(post)
         })
         .catch(err => {
+          myDebug(err);
           res.status(500).json({ error: "There was an error while saving the post to the database" })
         })
     })
     .catch(err => {
+      myDebug(err);
       res.status(500).json({ error: "There was an error while saving the post to the database" })
     })
 })
@@ -47,6 +49,7 @@ router.post ('/:id/comments', (req, res) => {
       if (post.length === 0) res.status(404).json({ message: "The post with the specified ID does not exist." })
     })
     .catch(err => {
+      myDebug(err);
       res.status(500).json({ error: "The post information could not be retrieved." })
     })
 
@@ -60,10 +63,12 @@ router.post ('/:id/comments', (req, res) => {
           res.status(201).json(data)
         })
         .catch(err => {
+          myDebug(err);
           res.status(500).json({ error: "There was an error while retrieving saved comment." })
         })
     })
     .catch(err => {
+      myDebug(err);
       res.status(500).json({ error: "There was an error while saving comment to the database." })
     })
 })
@@ -75,6 +80,7 @@ router.get('/', (req, res) => {
       res.status(200).json(data)
     })
     .catch(err => {
+      myDebug(err);
       res.status(500).json({ error: "The post information could not be retrieved." })
     })
 })
@@ -91,6 +97,7 @@ router.get('/:id', (req, res) => {
       res.status(200).json(post);
     })
     .catch(err => {
+      myDebug(err);
       res.status(500).json({ error: "The post information could not be retrieved." })
     })
 })
@@ -106,6 +113,7 @@ router.get('/:id/comments', (req, res) => {
       res.status(200).json(Posts.findPostComments(id)) 
     })
     .catch(err => {
+      myDebug(err);
       res.status(500).json({ error: "The post information could not be retrieved." })
     })
 
@@ -131,10 +139,12 @@ router.put('/:id', (req, res) => {
       res.status(200).json(newPost)
     })
     .catch(err => {
+      myDebug(err);
       res.status(500).json({ error: "The post information could not be modified." })
     })
   })
   .catch(err => {
+    myDebug(err);
     res.status(404).json({ errorMessage: "Unable to find post with the specified ID." })
   })
 })
@@ -153,9 +163,11 @@ router.delete('/:id', (req, res) => {
       res.status(200).json({ data: { id: id }, message: "DELETE Successful" })
     })
     .catch(err => {
+      myDebug(err);
       res.status(500).json({ error: "The post could not be removed" })
     })
   }).catch(err => {
+    myDebug(err);
     res.status(404).json({ message: "The post with the specified ID does not exist." })
   })
 })
@@ -173,4 +185,8 @@ function isValidID(num) {
   catch {
     return false;
   }
+}
+
+function myDebug(err) {
+  console.log({err})
 }
