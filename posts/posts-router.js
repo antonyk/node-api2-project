@@ -36,14 +36,9 @@ router.post('/', (req, res) => {
 })
 
 router.post ('/:id/comments', (req, res) => {
-  // create a new comment for a post using the post id from params
-  let id = 0;
-  try {
-    id = Number.parseInt(req.params.id)
-  }
-  catch {
-    res.status(400).json({ errorMessage: "Invalid ID." })
-  }
+  const id = req.params.id;
+  // verify id param is a valid number
+  if (!isValidID(id)) res.status(400).json({ errorMessage: "Invalid ID." })
 
   if (!req.body || req.body.text) res.status(400).json({ errorMessage: "Please provide text for the comment." })
 
@@ -85,14 +80,9 @@ router.get('/', (req, res) => {
 })
 
 router.get('/:id', (req, res) => {
-  let id = 0;
+  const id = req.params.id;
   // verify id param is a valid number
-  try {
-    id = Number.parseInt(req.params.id)
-  }
-  catch {
-    res.status(400).json({ errorMessage: "Invalid ID." })
-  }
+  if (!isValidID(id)) res.status(400).json({ errorMessage: "Invalid ID." })
 
   Posts.findById(id)
     .then(post => {
@@ -105,14 +95,9 @@ router.get('/:id', (req, res) => {
     })
 })
 router.get('/:id/comments', (req, res) => {
-  let id = 0;
+  const id = req.params.id;
   // verify id param is a valid number
-  try {
-    id = Number.parseInt(req.params.id)
-  }
-  catch {
-    res.status(400).json({ errorMessage: "Invalid ID." })
-  }
+  if (!isValidID(id)) res.status(400).json({ errorMessage: "Invalid ID." })
 
   Posts.findById(id)
     .then(post => {
@@ -128,13 +113,44 @@ router.get('/:id/comments', (req, res) => {
 
 // 3. Update
 router.put('/:id', (req, res) => {
+  const id = req.params.id;
+  // verify id param is a valid number
+  if (!isValidID(id)) res.status(400).json({ errorMessage: "Invalid ID." })
 
 })
 
 // 4. Delete
 router.delete('/:id', (req, res) => {
-  
+  const id = req.params.id;
+  // verify id param is a valid number
+  if (!isValidID(id)) res.status(400).json({ errorMessage: "Invalid ID." })
+
+  // verify the ID exists (although redundant; should be returned by the remove function)
+  Posts.findById(id)
+  .then(post => {
+    Posts.remove(id)
+    .then(del => {
+      res.status(200).json({ data: { id: id }, message: "DELETE Successful" })
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The post could not be removed" })
+    })
+  }).catch(err => {
+    res.status(404).json({ message: "The post with the specified ID does not exist." })
+  })
 })
 
 
 module.exports = router;
+
+// Helpers
+
+function isValidID(num) {
+  try {
+    const id = Number.parseInt(num, 10)
+    return ((id === NaN) || (id < 1)) ? false : true;
+  }
+  catch {
+    return false;
+  }
+}
