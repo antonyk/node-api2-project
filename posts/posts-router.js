@@ -117,6 +117,26 @@ router.put('/:id', (req, res) => {
   // verify id param is a valid number
   if (!isValidID(id)) res.status(400).json({ errorMessage: "Invalid ID." })
 
+  // validate new object data
+  if (!req.body || !req.body.title || !req.body.contents) res.status(400).json({ errorMessage: "Please provide title and contents for the post." })
+
+  // id and update object are valid;
+  Posts.findById(id)
+  .then(ret => {
+    if (ret.length === 0) res.status(404).json({ errorMessage: "Please provide title and contents for the post." })
+    const newPost = { ...ret, ...req.body }
+    Posts.update(id, req.body)
+    .then(ret => {
+      if (ret < 0) res.status(500).json({ error: "The post information could not be modified." })
+      res.status(200).json(newPost)
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The post information could not be modified." })
+    })
+  })
+  .catch(err => {
+    res.status(404).json({ errorMessage: "Unable to find post with the specified ID." })
+  })
 })
 
 // 4. Delete
