@@ -61,8 +61,8 @@ router.post ('/:id/comments', (req, res) => {
   Posts.insertComment(post)
     .then(pid => {
       Posts.findCommentById(pid.id)
-        .then(com => {
-          res.status(201).json(com)
+        .then(data => {
+          res.status(201).json(data)
         })
         .catch(err => {
           res.status(500).json({ error: "There was an error while retrieving saved comment." })
@@ -75,8 +75,15 @@ router.post ('/:id/comments', (req, res) => {
 
 // 2. Retrieve
 router.get('/', (req, res) => {
-
+  Posts.find()
+    .then(data => {
+      res.status(200).json(data)
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The post information could not be retrieved." })
+    })
 })
+
 router.get('/:id', (req, res) => {
 
 })
