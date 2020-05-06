@@ -19,7 +19,10 @@ api.use('/posts', postsRouter);
 api.get('/', (req, res) => {
   res.status(200).json({
     message: "API is up and running!",
-    request: req
+    headers: req.headers,
+    body: req.body,
+    params: req.params,
+    query: req.query
   });
 })
 
