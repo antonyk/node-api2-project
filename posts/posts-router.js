@@ -103,9 +103,26 @@ router.get('/:id', (req, res) => {
     .catch(err => {
       res.status(500).json({ error: "The post information could not be retrieved." })
     })
-
 })
 router.get('/:id/comments', (req, res) => {
+  let id = 0;
+  // verify id param is a valid number
+  try {
+    id = Number.parseInt(req.params.id)
+  }
+  catch {
+    res.status(400).json({ errorMessage: "Invalid ID." })
+  }
+
+  Posts.findById(id)
+    .then(post => {
+      if (post.length === 0) res.status(404).json({ message: "The post with the specified ID does not exist." })
+
+      res.status(200).json(Posts.findPostComments(id)) 
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The post information could not be retrieved." })
+    })
 
 })
 
