@@ -136,7 +136,7 @@ router.put('/:id', (req, res) => {
   Posts.findById(id)
   .then(ret => {
     if (ret.length === 0) res.status(404).json({ errorMessage: "Please provide title and contents for the post." })
-    const newPost = { ...ret, ...req.body }
+    const newPost = { ...ret[0], ...req.body }
     Posts.update(id, req.body)
     .then(ret => {
       if (ret < 0) res.status(500).json({ error: "The post information could not be modified." })
