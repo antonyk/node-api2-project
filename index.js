@@ -4,7 +4,7 @@ const postsRouter = require('./posts/posts-router');
 
 // Configure server
 const server = express();
-const port = process.env | 5000;
+const port = process.env.PORT || 5000;
 // Middleware
 // 1. Enable json
 server.use(express.json());
